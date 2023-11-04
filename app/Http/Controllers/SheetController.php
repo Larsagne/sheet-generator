@@ -7,7 +7,9 @@ use App\Models\Sequence;
 use App\Models\Sheet;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -19,7 +21,7 @@ class SheetController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Response
     {
         /** @var User $user */
         $user = auth()->user();
@@ -46,14 +48,14 @@ class SheetController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Sheet $sheet)
+    public function show(Sheet $sheet): Response
     {
         return Inertia::render('Sheet/Show', [
             'sheet' => $sheet
         ]);
     }
 
-    public function pdf(Sheet $sheet): \Illuminate\Http\Response
+    public function pdf(Sheet $sheet): HttpResponse
     {
         $pdf = Pdf::loadView('sheet', [
             'sheet' => $sheet
@@ -72,7 +74,7 @@ class SheetController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Sheet $sheet)
+    public function update(Request $request, Sheet $sheet): RedirectResponse
     {
         $newSheet = $request->get('sheet');
 
@@ -100,7 +102,7 @@ class SheetController extends Controller
         //
     }
 
-    private function setParts(array $parts, Sheet $sheet)
+    private function setParts(array $parts, Sheet $sheet): void
     {
         $parts = $this->sort($parts);
 
@@ -109,7 +111,7 @@ class SheetController extends Controller
         Part::destroy($oldParts->pluck('id'));
     }
 
-    private function handlePart(array $part, Sheet $sheet): int
+    private function handlePart(array $part, Sheet $sheet): string
     {
         if (isset($part['id'])) {
             $partModel = Part::find($part['id']);
@@ -133,7 +135,7 @@ class SheetController extends Controller
     }
 
 
-    private function handleSequence(array $sequence, Part $part): int
+    private function handleSequence(array $sequence, Part $part): string
     {
         if (isset($sequence['id'])) {
             $sequenceModel = Sequence::find($sequence['id']);

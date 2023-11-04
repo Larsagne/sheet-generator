@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('parts', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignIdFor(Sheet::class);
             $table->string('name');
             $table->integer('position');

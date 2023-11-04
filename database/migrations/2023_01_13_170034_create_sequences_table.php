@@ -15,7 +15,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sequences', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->foreignIdFor(Part::class);
             $table->integer('position');
             $table->integer('quantity')->default(1);

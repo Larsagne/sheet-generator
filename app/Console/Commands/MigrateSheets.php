@@ -142,11 +142,6 @@ class MigrateSheets extends Command
             if (empty($headers)) {
                 $headers = $data;
             } else {
-//                if (count($headers) !== count($data)) {
-//                    echo '<pre>';
-//                    var_dump($data);
-//                    die();
-//                }
                 $data = $this->extendArray($headers, $data);
                 $data = array_combine($headers, $data);
                 $entries[$data['id']] = $data;

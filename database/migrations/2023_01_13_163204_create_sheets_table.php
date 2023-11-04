@@ -15,8 +15,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('sheets', function (Blueprint $table) {
-            $table->id();
-            $table->foreignIdFor(User::class)->nullable()->constrained();
+            $table->uuid('id')->primary();
+            $table->foreignIdFor(User::class)->nullable();
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('artist');
