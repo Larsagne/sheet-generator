@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Contracts\Services\KeyServiceInterface;
-use App\Services\KeyService;
+use App\Contracts\Services\HarmonyServiceInterface;
+use App\Services\HarmonyService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -15,8 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(KeyServiceInterface::class, function () {
-            return new KeyService();
+        $this->app->singleton(HarmonyServiceInterface::class, function () {
+            return new HarmonyService();
         });
     }
 

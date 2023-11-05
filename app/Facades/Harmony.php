@@ -2,16 +2,17 @@
 
 namespace App\Facades;
 
-use App\Contracts\Services\KeyServiceInterface;
+use App\Contracts\Services\HarmonyServiceInterface;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static getKeys()
+ * @method static isValidChord(string $chord)
  */
-class Key extends Facade
+class Harmony extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return KeyServiceInterface::class;
+        return HarmonyServiceInterface::class;
     }
 }

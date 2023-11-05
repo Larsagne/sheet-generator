@@ -9,6 +9,7 @@ use Sushi\Sushi;
 
 class Key extends Model
 {
+    use Sushi;
 
     public $incrementing = false;
 

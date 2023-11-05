@@ -2,7 +2,9 @@
 
 namespace App\Contracts\Services;
 
-interface KeyServiceInterface
+interface HarmonyServiceInterface
 {
     public function getKeys(): array;
+
+    public function isValidChord(string $chord): bool;
 }
