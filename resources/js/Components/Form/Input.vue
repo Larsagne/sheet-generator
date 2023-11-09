@@ -4,23 +4,29 @@ import {ExclamationCircleIcon} from "@heroicons/vue/20/solid";
 const props = defineProps({
     name: String,
     label: String,
-    valid: Boolean,
-    modelValue: String,
     error: String,
+    type: {
+        type: String,
+        default: "text"
+    },
+    placeholder: String,
+    modelValue: String,
 })
+
 
 defineEmits(['update:modelValue'])
 </script>
 
 <template>
     <div class="sm:col-span-12">
-        <label :for="name" class="block text-sm font-medium leading-6 text-gray-900">{{ label }}</label>
+        <label :for="name" class="block text-sm font-medium leading-6 text-gray-900">{{ __(label) }}</label>
         <div class="mt-1 relative">
-            <input type="text"
+            <input
                    :name="name"
                    :id="name"
                    :value="modelValue"
-                   placeholder="Let It Be"
+                   :placeholder="placeholder"
+                   :type="type"
                    @input="$emit('update:modelValue', $event.target.value)"
                    class="block w-full rounded-md shadow-sm sm:text-sm"
                    :class="error ? 'text-red-900 ring-1 ring-inset border-0 ring-red-300 placeholder:text-red-300 focus:ring-red-500' : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500'"

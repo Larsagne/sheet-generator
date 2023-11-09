@@ -17,8 +17,7 @@ class StoreSheetRequest extends FormRequest
     public function rules(): array
     {
         return [
-//            'title' => 'required|string|max:255',
-            'title' => 'int',
+            'title' => 'required|string|max:255',
             'description' => 'string',
             'artist' => 'string|max:255',
             'duration' => 'int',

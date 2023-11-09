@@ -2,8 +2,6 @@
 import { computed, onMounted, onUnmounted, watch } from 'vue';
 import {Dialog, DialogDescription, DialogPanel, DialogTitle, TransitionChild, TransitionRoot} from "@headlessui/vue";
 
-// ToDo: Scrolling bar should be forced
-
 const props = defineProps({
     show: {
         type: Boolean,

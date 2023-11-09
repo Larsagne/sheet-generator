@@ -1,10 +1,8 @@
 <script setup>
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import PrimaryButton from '@/Components/Form/PrimaryButton.vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import Input from "@/Components/Form/Input.vue";
 
 const props = defineProps({
     email: String,
@@ -27,58 +25,42 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Reset Password" />
+        <Head :title="__('auth.reset_password')" />
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
-
-                <TextInput
-                    id="email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    v-model="form.email"
-                    required
-                    autofocus
-                    autocomplete="username"
+                <Input name="email"
+                       v-model="form.email"
+                       label="auth.email"
+                       :error="form.errors.email"
                 />
-
-                <InputError class="mt-2" :message="form.errors.email" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
-
-                <TextInput
-                    id="password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password"
-                    required
-                    autocomplete="new-password"
+                <Input name="password"
+                       type="password"
+                       v-model="form.password"
+                       label="auth.password_label"
+                       :error="form.errors.password"
                 />
-
-                <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    v-model="form.password_confirmation"
-                    required
-                    autocomplete="new-password"
+                <Input name="password_confirmation"
+                       type="password"
+                       v-model="form.password_confirmation"
+                       label="auth.confirm_password"
+                       :error="form.errors.password_confirmation"
                 />
-
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Reset Password
+                <PrimaryButton
+                    type="submit"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing || !form.password || !form.password_confirmation"
+                >
+                    {{ __('auth.reset_password') }}
                 </PrimaryButton>
             </div>
         </form>

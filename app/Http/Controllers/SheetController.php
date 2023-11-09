@@ -43,7 +43,13 @@ class SheetController extends Controller
      */
     public function store(StoreSheetRequest $request)
     {
-        dd($request->validated());
+        $sheetData = $request->validated();
+
+        $sheet = Sheet::make($sheetData);
+        $sheet->user_id=auth()->id();
+        $sheet->save();
+
+        return to_route('sheets.edit', ['sheet' => $sheet]);
     }
 
     /**

@@ -227,11 +227,11 @@ export default {
 </script>
 
 <template>
-    <BaseLayout>
+    <BaseLayout :title="__('sheet.edit_sheet', {'title': sheet.title})">
         <template #title>
             <div class="grid grid-cols-2 gap-x-4">
                 <div>
-                    <span v-html="sheet.title ? 'Sheet aktualisieren' : 'Sheet erstellen'"></span>
+                    {{ __('sheet.edit') }}
                 </div>
                 <div class="flex justify-end">
                     <button type="button"
