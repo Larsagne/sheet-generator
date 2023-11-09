@@ -10,6 +10,10 @@ const props = defineProps({
         default: "text"
     },
     placeholder: String,
+    disabled: {
+        type: Boolean,
+        default: false
+    },
     modelValue: String,
 })
 
@@ -27,8 +31,9 @@ defineEmits(['update:modelValue'])
                    :value="modelValue"
                    :placeholder="placeholder"
                    :type="type"
+                   :disabled="disabled"
                    @input="$emit('update:modelValue', $event.target.value)"
-                   class="block w-full rounded-md shadow-sm sm:text-sm"
+                   class="block w-full rounded-md shadow-sm sm:text-sm disabled:opacity-50"
                    :class="error ? 'text-red-900 ring-1 ring-inset border-0 ring-red-300 placeholder:text-red-300 focus:ring-red-500' : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500'"
                    :aria-invalid="error"
                    :aria-describedby="error ? 'title-error' : 'title'"

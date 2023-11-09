@@ -11,7 +11,7 @@ defineProps({
 </script>
 
 <template>
-    <BaseLayout>
+    <BaseLayout :title="__('profile.settings')">
         <div class="max-w-7xl mx-auto space-y-6">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <UpdateProfileInformationForm
@@ -21,7 +21,7 @@ defineProps({
                 />
             </div>
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg" v-if="$page.props.auth.user.source === 'laravel'">
                 <UpdatePasswordForm class="max-w-xl"/>
             </div>
 

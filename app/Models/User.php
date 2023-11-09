@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AuthSource;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -25,6 +26,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'source',
     ];
 
     /**
@@ -44,6 +46,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'source' => AuthSource::class,
     ];
 
     public function sheets(): HasMany

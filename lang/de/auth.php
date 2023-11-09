@@ -8,6 +8,7 @@ return [
     'name'   => 'Name',
     'password_label'   => 'Passwort',
     'confirm_password' => 'Passwort bestätigen',
+    'current_password' => 'Aktuelles Passwort',
     'failed'   => 'Diese Kombination aus Zugangsdaten wurde nicht in unserer Datenbank gefunden.',
     'password' => 'Das Passwort ist falsch.',
     'throttle' => 'Zu viele Loginversuche. Versuchen Sie es bitte in :seconds Sekunden nochmal.',

@@ -14,4 +14,5 @@ return [
     */
 
     'cancel' => 'Abbrechen',
+    'save' => 'Speichern',
 ];
