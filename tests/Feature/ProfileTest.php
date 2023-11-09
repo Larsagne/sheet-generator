@@ -96,4 +96,36 @@ class ProfileTest extends TestCase
 
         $this->assertNotNull($user->fresh());
     }
+
+    public function test_it_sets_the_language_correctly()
+    {
+        $user = User::factory()->create();
+
+        $language = 'de';
+        $response = $this
+            ->actingAs($user)
+            ->post('/profile/language', [
+                'language' => $language
+            ]);
+
+        $response
+            ->assertSessionHas('language', $language)
+            ->assertStatus(302);
+    }
+
+    public function test_it_sets_the_default_language_if_provided_language_is_not_valid()
+    {
+        $user = User::factory()->create();
+
+        $language = 'es';
+        $response = $this
+            ->actingAs($user)
+            ->post('/profile/language', [
+                'language' => $language
+            ]);
+
+        $response
+            ->assertSessionHas('language', config('app.locale'))
+            ->assertStatus(302);
+    }
 }

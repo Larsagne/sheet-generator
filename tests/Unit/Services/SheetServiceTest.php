@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Services;
 
-use App\Enums\Moods;
-use App\Enums\RootNotes;
+use App\Enums\Mood;
+use App\Enums\RootNote;
 use App\Facades\Harmony;
 use App\Models\User;
 use Database\Factories\SheetFactory;
@@ -18,16 +18,18 @@ class SheetServiceTest extends TestCase
      */
     public function test_it_creates_a_sheet_with_all_relations()
     {
+        // ToDo: Implement Builder pattern in this service to create a sheet with parts, sequences and measures
+        // Should be used in the controller
         $sheet = SheetFactory::new();
         $keys = Harmony::getKeys();
 
         $expectedKeys = [
-            ['id' => RootNotes::C->name . Moods::Major->name, 'shortName' => RootNotes::C->getShortName() . Moods::Major->getShortName()],
-            ['id' => RootNotes::C->name . Moods::Minor->name, 'shortName' => RootNotes::C->getShortName() . Moods::Minor->getShortName()],
-            ['id' => RootNotes::CSharp->name . Moods::Major->name, 'shortName' => RootNotes::CSharp->getShortName() . Moods::Major->getShortName()],
-            ['id' => RootNotes::CSharp->name . Moods::Minor->name, 'shortName' => RootNotes::CSharp->getShortName() . Moods::Minor->getShortName()],
-            ['id' => RootNotes::DFlat->name . Moods::Major->name, 'shortName' => RootNotes::DFlat->getShortName() . Moods::Major->getShortName()],
-            ['id' => RootNotes::DFlat->name . Moods::Minor->name, 'shortName' => RootNotes::DFlat->getShortName() . Moods::Minor->getShortName()],
+            ['id' => RootNote::C->name . Mood::Major->name, 'shortName' => RootNote::C->getShortName() . Mood::Major->getShortName()],
+            ['id' => RootNote::C->name . Mood::Minor->name, 'shortName' => RootNote::C->getShortName() . Mood::Minor->getShortName()],
+            ['id' => RootNote::CSharp->name . Mood::Major->name, 'shortName' => RootNote::CSharp->getShortName() . Mood::Major->getShortName()],
+            ['id' => RootNote::CSharp->name . Mood::Minor->name, 'shortName' => RootNote::CSharp->getShortName() . Mood::Minor->getShortName()],
+            ['id' => RootNote::DFlat->name . Mood::Major->name, 'shortName' => RootNote::DFlat->getShortName() . Mood::Major->getShortName()],
+            ['id' => RootNote::DFlat->name . Mood::Minor->name, 'shortName' => RootNote::DFlat->getShortName() . Mood::Minor->getShortName()],
         ];
 
         foreach ($expectedKeys as $expectedKey) {

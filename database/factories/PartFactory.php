@@ -22,7 +22,7 @@ class PartFactory extends Factory
             'name' => fake()->randomElement(['Intro', 'Verse', 'Pre-Chorus', 'Chorus', 'Bridge', 'Instrumental', 'Outro']),
             'position' => fake()->numberBetween(0, 100),
             'description' => fake()->text(80),
-            'lyrics' => fake()->text(400)
+            'lyrics' => fake()->text(400),
         ];
     }
 }

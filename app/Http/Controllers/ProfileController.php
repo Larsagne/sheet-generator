@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Language;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
@@ -59,5 +60,11 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function setLanguage(Request $request): RedirectResponse
+    {
+        session()->put('language', Language::tryFrom($request->language)?->value ?? config('app.locale'));
+        return back();
     }
 }

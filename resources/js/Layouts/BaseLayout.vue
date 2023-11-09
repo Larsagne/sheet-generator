@@ -1,3 +1,33 @@
+<script setup>
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import {Link, router, usePage} from '@inertiajs/vue3';
+import { computed } from "vue";
+
+const user = {
+    name: 'Tom Cook',
+    email: 'tom@example.com',
+    imageUrl:
+        '/storage/lars.jpg',
+}
+const navigation = [
+    { name: 'Dashboard', href: '/dashboard'},
+    { name: 'Sheets', href: '/sheets'},
+    { name: 'Shows', href: '/shows'},
+    { name: 'News', href: '/newss'},
+]
+const userNavigation = [
+    { name: 'Profil', href: '/profile'},
+    { name: 'Einstellungen', href: '/settings'},
+    { name: 'Ausloggen', href: '/logout', method: 'post'},
+]
+
+const activeLanguage = computed(() => {
+    return usePage().props.languages.find(language => language.value === usePage().props.language);
+});
+</script>
+
+
 <template>
     <div class="min-h-full">
         <div class="bg-gray-800" :class="{'pb-32': $slots['title'] || $slots['header']}">
@@ -25,8 +55,37 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="hidden md:block">
                             <div class="ml-4 flex items-center md:ml-6">
+                                <div class="mr-1">
+                                    <Menu as="div" class="relative inline-block text-left">
+                                        <div>
+                                            <MenuButton class="inline-flex w-full justify-center gap-x-1.5  px-3 py-2 rounded-md text-sm font-medium">
+                                                <img :src="activeLanguage.flag" :alt="activeLanguage.label" class="w-6">
+                                                <!--                                                <ChevronDownIcon class="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />-->
+                                            </MenuButton>
+                                        </div>
+
+                                        <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+                                            <MenuItems class="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                <div class="py-1">
+                                                    <MenuItem v-slot="{ active }" v-for="language in $page.props.languages" :key="language.value">
+                                                        <a href="#"
+                                                           class="inline-flex w-full"
+                                                           :class="[active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm']"
+                                                           @click="router.post(route('profile.setLanguage', { language: language.value }))"
+                                                        >
+                                                            <img :src="language.flag" :alt="language.label" class="w-6 mr-2">
+                                                            <span>{{ language.label }}</span>
+                                                        </a>
+                                                    </MenuItem>
+                                                </div>
+                                            </MenuItems>
+                                        </transition>
+                                    </Menu>
+                                </div>
+
                                 <button type="button" class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                                     <span class="sr-only">View notifications</span>
                                     <BellIcon class="h-6 w-6" aria-hidden="true" />
@@ -107,27 +166,3 @@
         </main>
     </div>
 </template>
-
-<script setup>
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { Link } from "@inertiajs/inertia-vue3";
-
-const user = {
-    name: 'Tom Cook',
-    email: 'tom@example.com',
-    imageUrl:
-        '/storage/lars.jpg',
-}
-const navigation = [
-    { name: 'Dashboard', href: '/dashboard'},
-    { name: 'Sheets', href: '/sheets'},
-    { name: 'Shows', href: '/shows'},
-    { name: 'News', href: '/newss'},
-]
-const userNavigation = [
-    { name: 'Profil', href: '/profile'},
-    { name: 'Einstellungen', href: '/settings'},
-    { name: 'Ausloggen', href: '/logout', method: 'post'},
-]
-</script>

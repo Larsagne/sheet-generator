@@ -19,10 +19,10 @@ class SheetFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => sprintf('%s %s', fake()->word, fake()->word),
+            'title' => ucwords(sprintf('%s %s', fake()->word, fake()->word)),
             'description' => fake()->sentence(12),
             'artist' => fake()->name,
-            'key' => Key::inRandomOrder()->first,
+            'key' => Key::inRandomOrder()->first(),
             'duration' => fake()->numberBetween(140, 270),
             'tempo' => fake()->numberBetween(65, 160),
             'time_signature' => '4/4',

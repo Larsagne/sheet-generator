@@ -46,7 +46,7 @@
 
 <script setup>
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
-import {InertiaLink} from "@inertiajs/inertia-vue3";
+import {Link} from "@inertiajs/vue3";
 
 defineProps({
     pagination: Object,

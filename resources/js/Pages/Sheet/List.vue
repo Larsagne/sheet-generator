@@ -1,22 +1,28 @@
 <script>
 import moment from 'moment';
 import BaseLayout from '@/Layouts/BaseLayout.vue';
-import {InertiaLink} from "@inertiajs/inertia-vue3";
+import {Link} from "@inertiajs/vue3";
 
 import {
-    PencilSquareIcon,
+    ClipboardDocumentIcon, DocumentDuplicateIcon, MinusCircleIcon,
+    PencilSquareIcon, XMarkIcon,
 } from '@heroicons/vue/24/outline'
+import {PlusIcon} from "@heroicons/vue/20/solid";
+import CreateSheetModal from "@/Pages/Sheet/Partials/CreateSheetModal.vue";
 
 export default {
     components: {
-        BaseLayout, PencilSquareIcon, InertiaLink
+        CreateSheetModal,
+        DocumentDuplicateIcon, MinusCircleIcon, PlusIcon, ClipboardDocumentIcon, XMarkIcon,
+        BaseLayout, PencilSquareIcon, Link
     },
     props: {
         sheets: Object,
     },
     data() {
         return {
-            searchTerm: ""
+            searchTerm: "",
+            createSheet: false,
         }
     },
     methods: {
@@ -43,16 +49,17 @@ export default {
                 <div>Sheets</div>
                 <div class="flex justify-end">
                     <button type="button"
+                            @click="createSheet = true;"
                             class="justify-end disabled:opacity-25 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         Neues Sheet anlegen
                     </button>
                 </div>
             </div>
         </template>
-        <template #header>
 
+        <template #header>
             <div>
-                <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab animi consequuntur explicabo nisi non! Accusamus atque distinctio eos, facere quasi sapiente. Deserunt, exercitationem laboriosam maiores officiis ratione sequi suscipit veritatis?</p>
+                <p class="mb-4">{{ __('sheet.description') }}</p>
                 <div class="mt-1 mb-2">
                     <input type="text" placeholder="Suchbegriff" name="searchTerm" id="searchTerm" v-model="searchTerm" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" />
                 </div>
@@ -90,24 +97,26 @@ export default {
                         <td class="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">{{ formatDate(sheet.created_at) }}</td>
                         <td class="hidden px-3 py-4 text-sm text-gray-500 md:table-cell">{{ formatDate(sheet.updated_at) }}</td>
                         <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <InertiaLink :href="route('sheets.edit', sheet.id)">
+                            <Link :href="route('sheets.edit', sheet.id)">
                                 <button type="button"
                                         class="inline-flex items-center rounded-md bg-indigo-50 text-indigo-700 hover:text-white hover:bg-indigo-700 border-none p-2 ml-1 text-sm font-medium leading-4 text-gray-700 shadow-sm">
                                     <PencilSquareIcon class="h-4 w-4" aria-hidden="true"/>
                                 </button>
-                            </InertiaLink>
+                            </Link>
 
-                            <InertiaLink :href="route('sheets.playback', sheet.id)">
+                            <Link :href="route('sheets.playback', sheet.id)">
                                 <button type="button"
                                         class="inline-flex items-center rounded-md bg-indigo-50 text-indigo-700 hover:text-white hover:bg-indigo-700 border-none p-2 ml-1 text-sm font-medium leading-4 text-gray-700 shadow-sm">
                                     Playback
                                 </button>
-                            </InertiaLink>
+                            </Link>
                         </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <CreateSheetModal :show="createSheet" @close="createSheet = false"></CreateSheetModal>
     </BaseLayout>
 </template>

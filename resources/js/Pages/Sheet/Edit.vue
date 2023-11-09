@@ -1,6 +1,6 @@
 <script>
 import BaseLayout from '@/Layouts/BaseLayout.vue';
-import {useForm} from '@inertiajs/inertia-vue3'
+import {useForm} from '@inertiajs/vue3'
 import {CalendarIcon, MapPinIcon, UsersIcon, ChevronUpIcon, ChevronDownIcon, PlusIcon} from '@heroicons/vue/20/solid'
 import {
     CheckIcon,
@@ -20,6 +20,7 @@ export default {
     },
     props: {
         sheet: Object,
+        // ToDo: Should be edit always
         isCreate: {
             type: Boolean,
             default: false
@@ -36,6 +37,7 @@ export default {
             lastTap: null,
             tapDuration: null,
             beats: 0,
+            // ToDo: Change to Vue is() method (https://vuejs.org/guide/essentials/component-basics.html#dynamic-components)
             currentPart: null,
             copiedSequence: null,
             showCloseDismissModal: false,

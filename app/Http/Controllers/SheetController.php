@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSheetRequest;
 use App\Models\Part;
 use App\Models\Sequence;
 use App\Models\Sheet;
@@ -13,11 +14,16 @@ use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
-/**
- * TODO: add auth check for sheets
- */
 class SheetController extends Controller
 {
+    /**
+     * Create the controller instance.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Sheet::class);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -32,17 +38,12 @@ class SheetController extends Controller
         ]);
     }
 
-    public function create(): Response
-    {
-        return Inertia::render('Sheet/Edit');
-    }
-
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreSheetRequest $request)
     {
-        //
+        dd($request->validated());
     }
 
     /**
@@ -57,6 +58,8 @@ class SheetController extends Controller
 
     public function pdf(Sheet $sheet): HttpResponse
     {
+        $this->authorize('pdf');
+
         $pdf = Pdf::loadView('sheet', [
             'sheet' => $sheet
         ]);
@@ -89,6 +92,8 @@ class SheetController extends Controller
 
     public function playback(Sheet $sheet): Response
     {
+        $this->authorize('playback');
+
         return Inertia::render('Sheet/Playback', [
             'sheet' => $sheet
         ]);

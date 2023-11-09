@@ -5,9 +5,6 @@
         "build": "vite build"
     },
     "devDependencies": {
-        "@inertiajs/inertia": "^0.11.0",
-        "@inertiajs/inertia-vue3": "^0.6.0",
-        "@inertiajs/progress": "^0.2.7",
         "@tailwindcss/forms": "^0.5.3",
         "@vitejs/plugin-vue": "^4.0.0",
         "autoprefixer": "^10.4.12",
@@ -22,7 +19,9 @@
     "dependencies": {
         "@headlessui/vue": "^1.7.7",
         "@heroicons/vue": "^2.0.13",
+        "@inertiajs/vue3": "^1.0.14",
         "howler": "^2.2.3",
+        "laravel-precognition-vue-inertia": "^0.5.2",
         "moment": "^2.29.4",
         "tonal": "^4.14.0",
         "tone": "^14.7.77",

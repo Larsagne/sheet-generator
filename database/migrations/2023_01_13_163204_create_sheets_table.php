@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->nullable();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->string('artist');
+            $table->string('artist')->nullable();
             $table->integer('duration')->nullable();
             $table->integer('tempo')->nullable();
             $table->string('time_signature')->default('4/4');

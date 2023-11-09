@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Enums\Moods;
-use App\Enums\RootNotes;
+use App\Enums\Mood;
+use App\Enums\RootNote;
 use Illuminate\Database\Eloquent\Model;
 use Sushi\Sushi;
 
@@ -21,8 +21,8 @@ class Key extends Model
     public function getRows(): array
     {
         $keys = [];
-        foreach (RootNotes::cases() as $rootNote) {
-            foreach (Moods::cases() as $mood) {
+        foreach (RootNote::cases() as $rootNote) {
+            foreach (Mood::cases() as $mood) {
                 $keys[] = [
                     'id' => $rootNote->name . $mood->name,
                     'shortName' => $rootNote->getShortName() . $mood->getShortName()

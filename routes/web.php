@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SheetController;
 use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -34,10 +35,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile/language', [ProfileController::class, 'setLanguage'])->name('profile.setLanguage');
 
-    Route::resource('sheets', SheetController::class);
     Route::get('/sheets/{sheet}/playback', [SheetController::class, 'playback'])->name('sheets.playback');
     Route::get('/sheets/{sheet}/pdf', [SheetController::class, 'pdf'])->name('sheets.pdf');
+    Route::resource('sheets', SheetController::class)->except('create')
+        ->middleware(HandlePrecognitiveRequests::class);
 });
 
 require __DIR__.'/auth.php';

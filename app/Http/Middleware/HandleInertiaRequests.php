@@ -2,7 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Language;
+use App\Http\Resources\LanguageResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 
@@ -34,6 +38,19 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            'language' => app()->getLocale(),
+            'languages' => LanguageResource::collection(Language::cases()),
+            'translations' => function () {
+//                return cache()->rememberForever('translations.' . app()->getLocale(), function () {
+                    return collect(File::allFiles(base_path('lang/' . app()->getLocale())))
+                        ->flatMap(function ($file) {
+                            return Arr::dot(
+                                File::getRequire($file->getRealPath()),
+                                $file->getBasename('.' . $file->getExtension()) . '.'
+                            );
+                        });
+//                });
+            },
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
                     'location' => $request->url(),

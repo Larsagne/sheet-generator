@@ -41,22 +41,4 @@ class Sheet extends Model
     {
         parent::boot();
     }
-
-    private function getPartsWithPositions(array $parts): array
-    {
-        $sortedParts = [];
-        foreach ($parts as $position => $part) {
-            $part['position'] = $position;
-            $sortedParts[] = $part;
-        }
-
-        return $sortedParts;
-    }
-
-    private function deleteOldParts(array $newParts)
-    {
-        $partIds = array_map(fn($part) => $part['id'] ?? null, $newParts);
-        $oldParts = $this->parts->filter(fn($oldPart) => !in_array($oldPart['id'], $partIds));
-        Part::destroy($oldParts->pluck('id'));
-    }
 }

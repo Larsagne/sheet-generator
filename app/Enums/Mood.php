@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum Moods
+enum Mood
 {
     case Minor;
     case Major;
