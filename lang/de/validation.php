@@ -213,5 +213,10 @@ return [
         'updated_at'               => 'Aktualisiert am',
         'username'                 => 'Benutzername',
         'year'                     => 'Jahr',
+
+        'tempo' => 'Tempo',
+        'key' => 'Tonart',
+        'time_signature' => 'Taktart',
+        'artist' => 'Künstler',
     ],
 ];

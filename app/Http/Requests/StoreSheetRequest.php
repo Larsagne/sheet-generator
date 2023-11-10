@@ -23,7 +23,7 @@ class StoreSheetRequest extends FormRequest
             'duration' => 'int',
             'tempo' => 'int',
             'key' => ['string', Rule::in(array_column(Harmony::getKeys(), 'shortName'))],
-            'time_signature' => 'string|regex:^\d+/\d+$',
+            'time_signature' => 'string|regex:/^\d+\/\d+$/',
             'parts' => 'array'
         ];
     }

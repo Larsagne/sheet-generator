@@ -23,7 +23,7 @@ class SheetTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->existingSheet = Sheet::factory()->for($this->user)->create();
+        $this->existingSheet = Sheet::factory()->for($this->user)->create(self::SHEET);
     }
 
     public function test_sheet_listing_page_is_displayed(): void
@@ -39,10 +39,8 @@ class SheetTest extends TestCase
 
     public function test_it_can_create_and_redirect_to_edit()
     {
-        $user = User::factory()->create();
-
         $response = $this
-            ->actingAs($user)
+            ->actingAs($this->user)
             ->post('/sheets', self::SHEET);
 
         $this->assertDatabaseHas('sheets', self::SHEET);
@@ -54,12 +52,15 @@ class SheetTest extends TestCase
 
     public function test_sheet_can_be_updated(): void
     {
+        $sheet = Sheet::factory()->for($this->user)->create(self::SHEET);
+        $sheetData = [
+            'title' => 'Title 2',
+            'artist'
+        ];
+
         $response = $this
             ->actingAs($this->user)
-            ->put(route('sheets.update', ['sheet' => $this->existingSheet->id]), [
-                'title' => 'Test User',
-                'email' => 'test@example.com',
-            ]);
+            ->put(route('sheets.update', ['sheet' => $sheet->id]), $sheetData);
 
         $response->assertStatus(201);
         $response->assertRedirect('/sheets/' . $this->existingSheet->id . '/edit');

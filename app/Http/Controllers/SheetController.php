@@ -83,17 +83,17 @@ class SheetController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Sheet $sheet): RedirectResponse
+    public function update(StoreSheetRequest $request, Sheet $sheet): RedirectResponse
     {
-        $newSheet = $request->get('sheet');
+        $newSheet = $request->validated();
+dd($newSheet);
 
         // set base attributes
         $sheet->update($newSheet);
 
         // remove, add, update and rearrange parts
-        $this->setParts($newSheet['parts'], $sheet);
-
-        return to_route('sheets.index');
+//        $this->setParts($newSheet['parts'], $sheet);
+        return back();
     }
 
     public function playback(Sheet $sheet): Response

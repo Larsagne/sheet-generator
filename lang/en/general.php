@@ -15,4 +15,5 @@ return [
 
     'cancel' => 'Cancel',
     'save' => 'Save',
+    'dismiss' => 'Discard changes',
 ];

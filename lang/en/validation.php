@@ -213,5 +213,10 @@ return [
         'updated_at'               => 'updated at',
         'username'                 => 'username',
         'year'                     => 'year',
+
+        'tempo' => 'Tempo',
+        'key' => 'Key',
+        'time_signature' => 'Time signature',
+        'artist' => 'Artist',
     ],
 ];

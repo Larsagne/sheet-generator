@@ -15,4 +15,5 @@ return [
 
     'cancel' => 'Abbrechen',
     'save' => 'Speichern',
+    'dismiss' => 'Änderungen verwerfen',
 ];
