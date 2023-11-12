@@ -19,8 +19,19 @@ class Sheet extends Model
     protected $with = ['parts', 'user'];
 
     protected $fillable = [
-        'title', 'description', 'artist', 'key', 'duration', 'tempo', 'time_signature',
+        'title', 'description', 'artist', 'key', 'duration', 'tempo', 'time_signature', 'parts'
     ];
+
+    protected static function boot()
+    {
+        static::saving(function ($model) {
+            self::setParts(is_array($model->parts) ? $model->parts : $model->parts->toArray(), $model);
+
+            unset($model->parts);
+        });
+
+        parent::boot();
+    }
 
     public function user(): BelongsTo
     {
@@ -37,8 +48,62 @@ class Sheet extends Model
         return $this->hasOne(Key::class);
     }
 
-    protected static function boot()
+    private static function setParts(array $parts, Sheet $sheet): void
     {
-        parent::boot();
+        $parts = self::sort($parts);
+
+        $partIds = array_map(fn($part) => self::handlePart($part, $sheet), $parts);
+        $oldParts = $sheet->parts()->whereNotIn('id', $partIds);
+        Part::destroy($oldParts->pluck('id'));
+    }
+
+    private static function handlePart(array $part, Sheet $sheet): string
+    {
+        if (isset($part['id'])) {
+            $partModel = Part::find($part['id']);
+            $partModel->update($part);
+        } else {
+            $partModel = $sheet->parts()->create($part);
+        }
+
+        self::setSequences($part['sequences'], $partModel);
+
+        return $partModel->id;
+    }
+
+    private static function setSequences(array $sequences, Part $part): void
+    {
+        $sequences = self::sort($sequences);
+
+        $sequenceIds = array_map(fn($sequence) => self::handleSequence($sequence, $part), $sequences);
+        $oldSequences = $part->sequences()->whereNotIn('id', $sequenceIds);
+        Sequence::destroy($oldSequences->pluck('id'));
+    }
+
+
+    private static function handleSequence(array $sequence, Part $part): string
+    {
+        if (isset($sequence['id'])) {
+            $sequenceModel = Sequence::find($sequence['id']);
+            $sequenceModel->update($sequence);
+        } else {
+            $sequenceModel = $part->sequences()->create($sequence);
+        }
+
+        return $sequenceModel->id;
+    }
+
+    /**
+     * This method is used to set the position attributes of parts and sequences
+     */
+    private static function sort(array $entities): array
+    {
+        $sortedEntities = [];
+        foreach ($entities as $position => $entity) {
+            $entity['position'] = $position;
+            $sortedEntities[] = $entity;
+        }
+
+        return $sortedEntities;
     }
 }

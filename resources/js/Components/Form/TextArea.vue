@@ -5,6 +5,10 @@ const props = defineProps({
     name: String,
     label: String,
     error: String,
+    rows: {
+        type: String,
+        default: "4"
+    },
     type: {
         type: String,
         default: "text"
@@ -29,7 +33,7 @@ defineEmits(['update:modelValue'])
                 :name="name"
                 :id="name"
                 :value="modelValue"
-                rows="4"
+                :rows="rows"
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:opacity-50"
                :class="error ? 'text-red-900 ring-1 ring-inset border-0 ring-red-300 placeholder:text-red-300 focus:ring-red-500' : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500'"
                :aria-invalid="error"

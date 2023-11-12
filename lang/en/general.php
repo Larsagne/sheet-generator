@@ -16,4 +16,8 @@ return [
     'cancel' => 'Cancel',
     'save' => 'Save',
     'dismiss' => 'Discard changes',
+    'close' => 'Close',
+    'copy' => 'Copy',
+    'copy_noun' => 'Copy',
+    'delete' => 'Delete',
 ];

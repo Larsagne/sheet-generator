@@ -16,14 +16,12 @@ class SheetTest extends TestCase
     ];
 
     private User $user;
-    private Sheet $existingSheet;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->existingSheet = Sheet::factory()->for($this->user)->create(self::SHEET);
     }
 
     public function test_sheet_listing_page_is_displayed(): void
@@ -62,34 +60,22 @@ class SheetTest extends TestCase
             ->actingAs($this->user)
             ->put(route('sheets.update', ['sheet' => $sheet->id]), $sheetData);
 
-        $response->assertStatus(201);
-        $response->assertRedirect('/sheets/' . $this->existingSheet->id . '/edit');
+        $response->assertStatus(302);
+        $response->assertRedirect(route('sheets.edit', ['sheet' => $sheet]));
     }
 
-    public function test_it_authorizes_access()
+
+    public function test_sheet_can_be_deleted(): void
     {
-        $ownerUser = User::factory()->create();
-        $differentUser = User::factory()->create();
-        $existingSheet = Sheet::factory()->create();
+        $sheet = Sheet::factory()->for($this->user)->create(self::SHEET);
 
-        $routes = [
-            ['route' => route('sheets.index', null, false), 'method' => 'GET', 'payload' => null],
-            ['route' => route('sheets.store', self::SHEET, false), 'method' => 'POST', 'payload' => null],
-            ['route' => route('sheets.update', ['sheet' => $existingSheet]), 'method' => 'PUT', 'payload' => null],
-            ['route' => route('sheets.delete', ['sheet' => $existingSheet]), 'method' => 'DELETE', 'payload' => null],
-            ['route' => route('sheets.show', ['sheet' => $existingSheet]), 'method' => 'GET', 'payload' => null],
-            ['route' => route('sheets.pdf', ['sheet' => $existingSheet]), 'method' => 'GET', 'payload' => null],
-            ['route' => route('sheets.playback', ['sheet' => $existingSheet]), 'method' => 'GET', 'payload' => null],
-            ['route' => route('sheets.edit', ['sheet' => $existingSheet]), 'method' => 'GET', 'payload' => null],
-        ];
+        $response = $this
+            ->actingAs($this->user)
+            ->delete(route('sheets.destroy', ['sheet' => $sheet->id]));
 
-        foreach ($routes as $route) {
-            $response = $this
-                ->actingAs($differentUser)
-                ->post('/sheets', [
-                    'name' => 'Test User',
-                    'email' => 'test@example.com',
-                ]);
-        }
+        $response->assertStatus(302);
+        $response->assertRedirect(route('sheets.index'));
     }
+
+    // ToDo: Add part/sequence tests from model
 }

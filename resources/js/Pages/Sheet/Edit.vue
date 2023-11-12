@@ -6,7 +6,7 @@ import Input from "@/Components/Form/Input.vue";
 import { useForm } from 'laravel-precognition-vue-inertia';
 import TextArea from "@/Components/Form/TextArea.vue";
 import Parts from "@/Pages/Sheet/Partials/Edit/Parts.vue";
-import {ref} from "vue";
+import {onBeforeUnmount, onMounted, ref} from "vue";
 
 const props = defineProps({
     sheet: Object,
@@ -15,8 +15,30 @@ const props = defineProps({
 const form = useForm('put', route('sheets.update', {sheet: props.sheet}), props.sheet);
 const showCloseDismissModal = ref(false);
 
+const handleSaveShortcut = (event) => {
+    if ((event.metaKey || event.ctrlKey) && event.key === 's') {
+        save();
+        event.preventDefault();
+    }
+};
+
+onMounted(() => {
+    setInterval(autoSave, 10000);
+    window.addEventListener('keydown', handleSaveShortcut);
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('keydown', handleSaveShortcut);
+});
+
 function save() {
     form.submit()
+}
+
+function autoSave() {
+    if (form.isDirty) {
+        save();
+    }
 }
 
 function returnToSheetsOverview() {

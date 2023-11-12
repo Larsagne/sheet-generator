@@ -14,8 +14,6 @@ defineEmits(['close'])
 const form = useForm('post', route('sheets.store'), {
     title: null
 })
-
-
 </script>
 
 <template>
@@ -29,7 +27,7 @@ const form = useForm('post', route('sheets.store'), {
                         {{ __('general.cancel') }}
                     </MutedButton>
 
-                    <PrimaryButton @click="save" :disabled="form.processing || !form.title || form.hasErrors">
+                    <PrimaryButton type="submit" :disabled="form.processing || !form.title || form.hasErrors">
                         {{ __('sheet.create') }}
                     </PrimaryButton>
                 </div>

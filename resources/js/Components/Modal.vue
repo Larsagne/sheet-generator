@@ -93,7 +93,7 @@ const maxWidthClass = computed(() => {
                                 :class="maxWidthClass"
                             >
                                 <DialogTitle v-if="show && title" class="text-xl">{{ __(title) }}</DialogTitle>
-                                <DialogDescription class="pt-4">
+                                <DialogDescription :class="(show && title) ? 'pt-4' : ''">
                                     <slot v-if="show" />
                                 </DialogDescription>
 

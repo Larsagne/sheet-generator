@@ -16,4 +16,8 @@ return [
     'cancel' => 'Abbrechen',
     'save' => 'Speichern',
     'dismiss' => 'Änderungen verwerfen',
+    'close' => 'Schließen',
+    'copy' => 'Kopieren',
+    'copy_noun' => 'Kopie',
+    'delete' => 'Löschen',
 ];
