@@ -1,196 +1,184 @@
 <script setup>
-import {ref} from "vue";
+import {computed, nextTick, ref} from "vue";
 import VueResizable from 'vue-resizable';
 
-const isDragging = ref(false);
-const draggingIndex = ref(null);
-const offsetX = ref(0);
-const offsetY = ref(0);
 const texts = ref([
-    { content: 'Text 1', x: 50, y: 50, width: 150, height: 80 },
-    { content: 'Text 2', x: 200, y: 100, width: 150, height: 80 },
+    {content: 'Text 1', x: '10%', y: '20%', width: 80, height: 40, dragging: false, ref: null, editRef: null, isDeleting: false},
+    {content: 'Text 2', x: '20%', y: '10%', width: 100, height: 30, dragging: false, ref: null, editRef: null, isDeleting: false},
+    {content: 'Text 3', x: '5%', y: '50%', width: 150, height: 80, dragging: false, ref: null, editRef: null, isDeleting: false},
 ]);
 
-const tW = ref(150);
-const tH = ref(80);
-const handlers = ref(["r", "rb", "b", "lb", "l", "lt", "t", "rt"]);
 const left = ref("10%");
 const top = ref('40%');
-const height = ref(tH);
-const width = ref(tW);
-const minW = ref(40);
-const minH = ref(20);
-const fit = ref(true);
-const event = ref("");
-const dragSelector = ref(".draggable");
-const test = ref(null);
+const height = ref(80);
+const width = ref(150);
+const lastTap = ref(0);
+const isDragging = ref(false);
+const isDeleting = ref(false);
+
+const deleteButtonRef = ref(null);
 
 const props = defineProps([
-    'container'
+    'container',
+    'header',
 ]);
 
-function startDragging(event, index) {
-    isDragging.value = true;
-    draggingIndex.value = index;
-    offsetX.value = event.clientX - texts.value[index].x;
-    offsetY.value = event.clientY - texts.value[index].y;
+const focusDeleting = computed(() => {
+    return isDragging.value;
+});
 
-    window.addEventListener('mousemove', handleDragging);
-    window.addEventListener('mouseup', stopDragging);
-}
-function handleDragging(event) {
-    if (isDragging.value) {
-        let newX = event.clientX - offsetX.value;
-        let newY = event.clientY - offsetY.value;
-
-        let containerLeft = props.container.getBoundingClientRect().left;
-        let containerRight = props.container.getBoundingClientRect().right;
-
-        if (newX < containerLeft) {
-            texts.value[draggingIndex.value].x = containerLeft;
-        } else if (newX > containerRight) {
-            // ToDo: Subtract width
-            texts.value[draggingIndex.value].x = containerRight;
-        } else {
-            texts.value[draggingIndex.value].x = newX;
-        }
-
-        texts.value[draggingIndex.value].y = newY;
+function handleDoubleClick(event, callback) {
+    const now = new Date().getTime();
+    if (now - lastTap.value < 300) {
+        callback(event);
     }
-}
-function stopDragging() {
-    isDragging.value = false;
-    draggingIndex.value = null;
-    window.removeEventListener('mousemove', handleDragging);
-    window.removeEventListener('mouseup', stopDragging);
+
+    lastTap.value = now;
 }
 
-
-function startResizing(event, index) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    isDragging.value = true;
-    draggingIndex.value = index;
-    offsetX.value = event.clientX - texts.value[index].x;
-    offsetY.value = event.clientY - texts.value[index].y;
-
-    window.addEventListener('mousemove', handleResizing);
-    window.addEventListener('mouseup', stopResizing);
-}
-
-function handleResizing(event) {
-    if (isDragging.value) {
-        let newX = event.clientX - offsetX.value;
-        let newY = event.clientY - offsetY.value;
-
-        let containerLeft = props.container.getBoundingClientRect().left;
-        let containerRight = props.container.getBoundingClientRect().right;
-
-        if (newX < containerLeft) {
-            texts.value[draggingIndex.value].x = containerLeft;
-        } else if (newX > containerRight) {
-            texts.value[draggingIndex.value].x = containerRight;
-        } else {
-            texts.value[draggingIndex.value].x = newX;
-        }
-
-        texts.value[draggingIndex.value].y = newY;
-    }
-}
-function stopResizing() {
-    isDragging.value = false;
-    draggingIndex.value = null;
-    window.removeEventListener('mousemove', handleResizing);
-    window.removeEventListener('mouseup', stopResizing);
-}
-function dragEnd(data) {
-    eHandler(data);
-    document.body.style.overflow = 'auto';
-}
-function eHandler(data) {
-    document.body.style.overflow = 'hidden';
-    console.log('test');
-    width.value = data.width;
-    height.value = data.height;
-    left.value = data.left;
-    top.value = data.top;
-    event.value = data.eventName;
-}
-function focus() {
-    const input = test.value;
+function focus(index) {
+    const input = texts.value[index].editRef;
     input.focus()
     let value = input.value;
     input.value = '';
     input.value = value;
 }
-function addNote() {
-    console.log('addnote');
+
+function dragStart(index, data) {
+    eHandler(index, data);
+    isDragging.value = true;
+    texts.value[index]['dragging'] = true;
+    document.body.style.overflow = 'hidden';
+}
+
+function dragEnd(index, data) {
+    eHandler(index, data);
+    isDragging.value = false;
+    texts.value[index].dragging = false;
+
+    if (texts.value[index].isDeleting) {
+        texts.value.splice(index, 1);
+    }
+
+    document.body.style.overflow = 'auto';
+}
+
+function eHandler(index, data) {
+    const text = texts.value[index];
+
+    text['x'] = data.left;
+    text['y'] = data.top;
+    text['width'] = data.width;
+    text['height'] = data.height;
+
+    const rect1 = text.ref.getBoundingClientRect();
+    const rect2 = deleteButtonRef.value.getBoundingClientRect();
+
+    const overlap = !(
+        rect1.right < rect2.left ||
+        rect1.left > rect2.right ||
+        rect1.bottom < rect2.top ||
+        rect1.top > rect2.bottom
+    );
+
+    if (overlap) {
+        text.isDeleting = true;
+        isDeleting.value = true;
+    } else {
+        text.isDeleting = false;
+        isDeleting.value = false;
+    }
+}
+
+function addNote(event) {
+    const count = texts.value.push(
+        {content: '', x: event.layerX.toString() + 'px', y: event.layerY + 'px', width: 96, height: 40, dragging: false, ref: null, isDeleting: false}
+    );
+
+    // texts.value[count - 1].focus();
+    nextTick(() => {
+        texts.value[count - 1].editRef.focus()
+    })
 }
 </script>
 
 <template>
-    <div @contextmenu.prevent="showContextMenu($event)" class="absolute w-full h-full" @dblclick="addNote">
-        <div class="container-test">
-            <vue-resizable
-                class="resizable bg-gray-100"
-                ref="resizableComponent"
-                :dragSelector="dragSelector"
-                :active="handlers"
-                :fit-parent="fit"
-                :min-width="minW"
-                :min-height="minH"
-                :width="width"
-                :height="height"
-                :left="left"
-                :top="top"
-                @mount="eHandler"
-                @resize:move="eHandler"
-                @resize:start="eHandler"
-                @resize:end="eHandler"
-                @drag:move="eHandler"
-                @drag:start="eHandler"
-                @drag:end="dragEnd"
-                @dblclick="focus"
+    <div
+        class="h-full"
+        @click.stop="(e) => handleDoubleClick(e, addNote)"
+    >
+        <vue-resizable
+            class="bg-gray-100 absolute z-10 border-red-500 border p-1"
+            dragSelector=".draggable"
+            :active='["r", "rb", "b", "lb", "l", "lt", "t", "rt"]'
+            :fit-parent=true
+            :min-width=40
+            :min-height=20
+            :width="text.width"
+            :height="text.height"
+            :left="text.x"
+            :top="text.y"
+            @mount="(data) => eHandler(index, data)"
+            @resize:move="(data) => eHandler(index, data)"
+            @resize:start="(data) => eHandler(index, data)"
+            @resize:end="(data) => eHandler(index, data)"
+            @drag:move="(data) => eHandler(index, data)"
+            @drag:start="(data) => dragStart(index, data)"
+            @drag:end="(data) => dragEnd(index, data)"
+            @click.stop="(e) => handleDoubleClick(e, () => {focus(index)})"
+            v-for="(text, index) in texts"
+            :key="index"
+            :class="text.isDeleting ? 'opacity-0' : 'opacity-100'"
+        >
+            <div
+                class="h-full cursor-move text-red-500  block draggable"
+                :ref="(el) => {text.ref = el}"
             >
-                <div class="block draggable" style="padding:2px">
-                    <textarea
-                        ref="test"
-                        class="bg-gray-100"
-                        style="resize:none; width: 100%; height: 100%; font-size: 12px"
-                    >Test 123</textarea>
+                <textarea
+                    :ref="(el) => {text.editRef = el}"
+                    class="bg-gray-100 resize-none w-full h-full text-xs overflow-hidden"
+                    style="box-shadow: none;"
+                >{{ text.content }}</textarea>
+            </div>
+        </vue-resizable>
 
-                </div>
-            </vue-resizable>
+        <div class="transition-all" :class="isDragging ? 'opacity-100' : 'opacity-0'">
+            <button
+                class="w-12 h-12 z-50 flex items-center justify-center rounded-full bg-red-600 shadow-2xl shadow-red-900  ring-offset-2 ring-2 ring-red-600 mx-auto inset-x-0 bottom-12 fixed"
+                :class="isDeleting ? 'scale-110' : ''"
+                ref="deleteButtonRef"
+            >
+                <!-- Icon oder Symbol für das Löschen hinzufügen -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
         </div>
     </div>
 </template>
 
 <style scoped>
 .block {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 12px;
-    color: red;
-    border: 2px solid red;
-    font-weight: 700;
-    cursor: move;
+    //height: 100%;
+    //display: flex;
+    //flex-direction: column;
+    //justify-content: center;
+    //align-items: center;
+    //font-size: 12px;
+    //color: red;
+    //border: 2px solid red;
+    //font-weight: 700;
+    //cursor: move;
 }
+
 .block textarea {
     padding: 0;
     line-height: 1;
     cursor: move;
     border: 0;
 }
-.container-test {
-    width: 100%;
-    height: 100%;
-    display: inline-block;
-    color: #333333;
-    float: left;
+
+.resizable-component.absolute {
+    position: absolute;
 }
 </style>
