@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^2.0",
+        "beyondcode/laravel-websockets": "^1.14",
         "calebporzio/sushi": "^2.4",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6",
@@ -14,6 +15,8 @@
         "laravel/sanctum": "^3.3",
         "laravel/socialite": "^5.10",
         "laravel/tinker": "^2.8",
+        "pusher/pusher-php-server": "^7.2",
+        "react/promise": "^2.3",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {

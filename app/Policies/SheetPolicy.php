@@ -20,7 +20,7 @@ class SheetPolicy
      */
     public function view(User $user, Sheet $sheet): bool
     {
-        return $user->id === $sheet->user_id;
+        return $this->hasSheetAccess($user, $sheet);
     }
 
     /**
@@ -28,7 +28,7 @@ class SheetPolicy
      */
     public function pdf(User $user, Sheet $sheet): bool
     {
-        return $user->id === $sheet->user_id;
+        return $this->hasSheetAccess($user, $sheet);
     }
 
     /**
@@ -36,7 +36,7 @@ class SheetPolicy
      */
     public function playback(User $user, Sheet $sheet): bool
     {
-        return $user->id === $sheet->user_id;
+        return $this->hasSheetAccess($user, $sheet);
     }
 
     /**
@@ -60,6 +60,12 @@ class SheetPolicy
      */
     public function delete(User $user, Sheet $sheet): bool
     {
+        return $user->id === $sheet->user_id;
+    }
+
+    private function hasSheetAccess(User $user, Sheet $sheet): bool
+    {
+        // Todo: Extend if user has access
         return $user->id === $sheet->user_id;
     }
 }

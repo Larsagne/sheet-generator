@@ -163,7 +163,7 @@ const activeLanguage = computed(() => {
         </div>
 
         <div class="-mt-32" v-if="$slots['header']">
-            <div class="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-4 pb-8 sm:px-6 lg:px-8">
                 <div class="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
                     <slot name="header"></slot>
                 </div>

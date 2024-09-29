@@ -63,7 +63,6 @@ export default {
                 }
 
                 me.clock++;
-                console.log('Clock')
             }, 1 / (this.sheet.tempo / 60) * 1000);
         },
         stop() {
@@ -120,8 +119,6 @@ export default {
                     }
                 })
             })
-
-            console.log('Sequences', this.completeChordProgression);
         }
     }
 }

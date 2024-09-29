@@ -1,5 +1,4 @@
 <script setup>
-import { useForm } from 'laravel-precognition-vue-inertia';
 import Modal from "@/Components/Modal.vue";
 import MutedButton from "@/Components/Form/MutedButton.vue";
 import DangerButton from "@/Components/Form/DangerButton.vue";
@@ -11,10 +10,6 @@ const props = defineProps({
 })
 
 const emits = defineEmits(['close'])
-
-const form = useForm('post', route('sheets.store'), {
-    title: null
-})
 
 function deleteSheet() {
     router.delete(

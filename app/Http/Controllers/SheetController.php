@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SheetUpdated;
 use App\Http\Requests\StoreSheetRequest;
-use App\Models\Part;
-use App\Models\Sequence;
 use App\Models\Sheet;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -32,9 +30,11 @@ class SheetController extends Controller
         /** @var User $user */
         $user = auth()->user();
         $sheets = $user->sheets()->without('parts')->get();
+        $bands = $user->bands()->get();
 
         return Inertia::render('Sheet/List', [
-            'sheets' => $sheets
+            'sheets' => $sheets,
+            'bands' => $bands
         ]);
     }
 
@@ -87,6 +87,8 @@ class SheetController extends Controller
     {
         $newSheet = $request->validated();
         $sheet->update($newSheet);
+
+        SheetUpdated::dispatch($sheet);
 
         return to_route('sheets.edit', ['sheet' => $sheet]);
     }

@@ -6,6 +6,7 @@ use App\Enums\AuthSource;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -52,5 +53,26 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sheets(): HasMany
     {
         return $this->hasMany(Sheet::class);
+    }
+
+    public function bands(): BelongsToMany
+    {
+        return $this->belongsToMany(Band::class, 'band_member', 'member_id', 'band_id');
+    }
+
+    public function invitations(): HasMany
+    {
+        return $this->hasMany(Invitation::class, 'email', 'email');
+    }
+
+    public function routeNotificationForMail($notification)
+    {
+        return $this->email;
+    }
+
+    public function routeNotificationForDatabase($notification)
+    {
+        // Hier zurückgeben, wie der Benutzer für die Datenbank-Benachrichtigung konfiguriert werden soll
+        return $this->id; // Beispiel: Benachrichtigungen in die 'notifications' Tabelle für diesen Benutzer speichern
     }
 }

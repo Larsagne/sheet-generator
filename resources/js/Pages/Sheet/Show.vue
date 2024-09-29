@@ -1,13 +1,19 @@
 <script setup>
-import {Head} from "@inertiajs/vue3";
+import {Head, router} from "@inertiajs/vue3";
 import moment from "moment";
 import Notes from "@/Pages/Sheet/Partials/Show/Notes.vue";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 
-defineProps({
+const props = defineProps({
     sheet: Object
 });
 
+onMounted(() => {
+    Echo.private(`App.Models.Sheet.` + props.sheet.id)
+        .listen('SheetUpdated', () => {
+            router.reload({only: ['sheet']})
+        });
+});
 
 const container = ref(null);
 const header = ref(null);
@@ -79,26 +85,6 @@ const footer = ref(null);
                                         </div>
                                     </div>
                                 </div>
-                                <!--                                        @foreach($sequence->measures as $measure)-->
-                                <!--                                        @php-->
-                                <!--                                        $sup = ['b', '#', 1, 2, 3, 4, 5, 6, 7, 8, 9, 'add', '+', '°', 'maj', 'dim', '(sus)', '(', ')'];-->
-                                <!--                                        $sub = ['sus'];-->
-                                <!--                                        $chords = $measure['chords'];-->
-                                <!--                                        foreach ($sup as $key) {-->
-                                <!--                                        $chords = str_replace($key, '<sup>'. $key .'</sup>', $chords);-->
-                                <!--                                        }-->
-                                <!--                                        foreach ($sub as $key) {-->
-                                <!--                                        $chords = str_replace($key, '<span class="custom-sub">'. $key .'</span>', $chords);-->
-                                <!--                                        }-->
-                                <!--                                        $chords = str_replace('H', 'B', $chords);-->
-                                <!--                                        $chords = str_replace('_', ' ', $chords);-->
-                                <!--                                        $chords = str_replace('-', '&mdash;', $chords);-->
-                                <!--                                        @endphp-->
-                                <!--                                        <span>{!! $chords !!}</span>-->
-                                <!--                                        @if (!$loop->last)-->
-                                <!--                                        <span style="padding: 0 1px;">|</span>-->
-                                <!--                                        @endif-->
-                                <!--                                        @endforeach-->
                             </div>
                         </div>
                     </div>

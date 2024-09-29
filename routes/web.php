@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\BandController;
+use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SheetController;
 use App\Http\Controllers\WebsiteController;
@@ -34,6 +36,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/sheets/{sheet}/pdf', [SheetController::class, 'pdf'])->name('sheets.pdf');
     Route::resource('sheets', SheetController::class)->except('create')
         ->middleware(HandlePrecognitiveRequests::class);
+
+    Route::resource('bands', BandController::class)->except(['create', 'index'])
+        ->middleware(HandlePrecognitiveRequests::class);
+    Route::delete('/bands/{band}/remove-member/{memberId}', [BandController::class, 'removeMember'])
+        ->name('bands.removeMember');
+
+
+    Route::resource('invitations', InvitationController::class)->only(['store', 'destroy'])
+        ->middleware(HandlePrecognitiveRequests::class);
+    Route::get('/invitations/{invitation}/accept', [InvitationController::class, 'acceptInvitation'])
+        ->name('invitations.accept');
 });
 
 require __DIR__.'/auth.php';

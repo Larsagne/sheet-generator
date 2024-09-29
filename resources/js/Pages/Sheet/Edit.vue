@@ -23,7 +23,7 @@ const handleSaveShortcut = (event) => {
 };
 
 onMounted(() => {
-    setInterval(autoSave, 10000);
+    // setInterval(autoSave, 10000);
     window.addEventListener('keydown', handleSaveShortcut);
 })
 

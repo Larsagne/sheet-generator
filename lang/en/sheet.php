@@ -1,18 +1,7 @@
 <?php
+declare(strict_types=1);
 
 return [
-
-    /*
-    |--------------------------------------------------------------------------
-    | Authentication Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used during authentication for various
-    | messages that we need to display to the user. You are free to modify
-    | these language lines according to your application's requirements.
-    |
-    */
-
     'create' => 'Create sheet',
     'edit' => 'Edit sheet',
     'delete' => 'Delete sheet',
@@ -32,7 +21,7 @@ return [
     'updated_at' => 'Updated at',
     'lyrics' => 'Lyrics',
     'playback' => 'Playback',
-    'delete_confirm_description' => 'Soll das Sheet ":title" wirklich gelöscht werden? Das Sheet kann nicht wiederhergestellt werden.',
+    'delete_confirm_description' => 'Should the ‘:title’ sheet really be deleted? The sheet cannot be restored.',
     'parts' => 'Parts',
     'add_part' => 'Add part',
     'previous_part' => 'Previous part',
