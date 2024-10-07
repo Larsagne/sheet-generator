@@ -77,4 +77,14 @@ class SheetPolicyTest extends TestCase
 
         $this->assertFalse($policy->delete($anotherUser, $sheet));
     }
+
+    public function testBandAccess()
+    {
+        // Todo
+    }
+
+    public function testUserAccess()
+    {
+        // Todo
+    }
 }

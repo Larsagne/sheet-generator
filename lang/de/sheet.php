@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 return [
+    'my_sheets' => 'Meine Sheets',
     'create' => 'Sheet erstellen',
     'edit' => 'Sheet bearbeiten',
     'delete' => 'Sheet löschen',
@@ -28,11 +29,13 @@ return [
     'next_part' => 'Nächster Part',
     'edit_part' => 'Part bearbeiten',
     'edit_part_description' => 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-    'parts_description' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aperiam, autem consequuntur doloremque dolorum eius enim eos exercitationem iste libero minima nisi odio perspiciatis placeat sed soluta ut vel veritatis.',
+    'parts_description' => 'Hier findest du die Übersicht über die verschiedenen Parts des Sheets. Jeder Part besteht aus mehreren Akkordfolgen und einer Beschreibung des Parts. Darüber hinaus können Lyrics hinterlegt werden. Im kombinierten Modus können die Akkorde direkt den Lyrics zugeordnet werden.',
     'tap' => 'Tap',
     'unsaved_changes' => 'Ungespeicherte Änderungen',
     'confirm_dismiss' => 'Bist du sicher, dass du zur Übersicht zurückkehren möchtest? Ungespeicherte Änderungen gehen verloren.',
     'add_sequence' => 'Akkordfolge hinzufügen',
     'sequences' => 'Akkordfolgen',
     'name' => 'Name',
+    'simple_mode' => 'Kombinierter Modus',
+    'lyrics_and_chords' => 'Lyrics und Chords',
 ];

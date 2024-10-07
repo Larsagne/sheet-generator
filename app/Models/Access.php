@@ -8,26 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Invitation extends Model
+class Access extends Model
 {
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'email', 'token', 'invitable_id', 'invitable_type', 'invited_by'
+        'accessable_id', 'accessable_type', 'resourceable_id', 'resourceable_type'
     ];
 
-    public function invitable(): MorphTo
+    public function accessable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function user(): BelongsTo
+    public function resourceable(): MorphTo
     {
-        return $this->belongsTo(User::class, 'email', 'email');
-    }
-
-    public function invitedBy(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'id', 'invited_by');
+        return $this->morphTo();
     }
 }

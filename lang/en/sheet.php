@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 return [
+    'my_sheets' => 'My sheets',
     'create' => 'Create sheet',
     'edit' => 'Edit sheet',
     'delete' => 'Delete sheet',
@@ -35,4 +36,6 @@ return [
     'add_sequence' => 'Add chord sequence',
     'sequences' => 'Chord sequences',
     'name' => 'Name',
+    'simple_mode' => 'Combined mode',
+    'lyrics_and_chords' => 'Lyrics and chords',
 ];

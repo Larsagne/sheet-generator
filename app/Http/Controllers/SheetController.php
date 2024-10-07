@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\SheetUpdated;
 use App\Http\Requests\StoreSheetRequest;
+use App\Models\Band;
 use App\Models\Sheet;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -22,15 +23,34 @@ class SheetController extends Controller
         $this->authorizeResource(Sheet::class);
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): Response
     {
         /** @var User $user */
         $user = auth()->user();
-        $sheets = $user->sheets()->without('parts')->get();
+        $userId = $user->id;
         $bands = $user->bands()->get();
+
+        $sheets = Sheet::where('user_id', $userId)
+            ->orWhereIn('id', function ($query) use ($userId) {
+                $query->select('resourceable_id')
+                    ->from('accesses')
+                    ->where('resourceable_type', Sheet::class)
+                    ->where('accessable_type', User::class)
+                    ->where('accessable_id', $userId);
+            })
+            ->orWhereIn('id', function ($query) use ($userId) {
+                $query->select('resourceable_id')
+                    ->from('accesses')
+                    ->where('resourceable_type', Sheet::class)
+                    ->where('accessable_type', Band::class)
+                    ->whereIn('accessable_id', function ($subquery) use ($userId) {
+                        $subquery->select('band_id')
+                            ->from('band_member')
+                            ->where('member_id', $userId);
+                    });
+            })
+            ->orderBy('title')
+            ->get();
 
         return Inertia::render('Sheet/List', [
             'sheets' => $sheets,
@@ -38,9 +58,6 @@ class SheetController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreSheetRequest $request)
     {
         $sheetData = $request->validated();
@@ -52,9 +69,6 @@ class SheetController extends Controller
         return to_route('sheets.edit', ['sheet' => $sheet]);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Sheet $sheet): Response
     {
         return Inertia::render('Sheet/Show', [
@@ -88,7 +102,7 @@ class SheetController extends Controller
         $newSheet = $request->validated();
         $sheet->update($newSheet);
 
-        SheetUpdated::dispatch($sheet);
+//        SheetUpdated::dispatch($sheet);
 
         return to_route('sheets.edit', ['sheet' => $sheet]);
     }

@@ -8,13 +8,15 @@ import {ref} from "vue";
 import PrimaryButton from "@/Components/Form/PrimaryButton.vue";
 import MutedButton from "@/Components/Form/MutedButton.vue";
 
+// todo: store copied sequence globally
 const copiedSequence = ref(null);
 const refs = ref({});
 const props = defineProps({
     part: Object,
     previousPart: Object | null,
     nextPart: Object | null,
-    getNewSequence: Function
+    getNewSequence: Function,
+    timeSignature: String
 });
 
 defineEmits([
@@ -43,7 +45,7 @@ function pasteSequence(sequenceKey) {
 function addMeasure(sequenceKey) {
     props.part.sequences[sequenceKey]['measures'].push({
         'chords': '',
-        'time_signature': props.time_signature
+        'time_signature': props.timeSignature
     });
 }
 
@@ -132,7 +134,6 @@ function focusMeasure(sequenceKey, measureKey, setToEnd = false) {
             <div class="grid lg:grid-cols-12 divide-x">
                 <div class="lg:pr-4 col-span-5">
                     <h3 class="text-2xl text-gray-800 font-bold mb-2">{{ __('sheet.edit_part') }}</h3>
-                    <p class="mb-4">{{ __('sheet.edit_part_description') }}</p>
                     <div class="mb-4">
                         <Input
                             name="name"
@@ -147,15 +148,33 @@ function focusMeasure(sequenceKey, measureKey, setToEnd = false) {
                             label="sheet.description_label"
                         />
                     </div>
-                    <div>
+                    <div v-if="!part.simple">
                         <TextArea
                             name="lyrics"
                             v-model="part.lyrics"
                             label="sheet.lyrics"
                         />
                     </div>
+                    <div class="mt-4">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" :checked="part.simple" class="sr-only peer" @change="part.simple = !part.simple">
+                            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            <span class="ms-3 text-sm font-medium text-gray-900 ml-2">{{ __('sheet.simple_mode') }}</span>
+                        </label>
+                    </div>
                 </div>
-                <div class="lg:pl-4 col-span-7">
+
+                <div class="lg:pl-4 col-span-7" v-if="part.simple">
+                    <h3 class="font-bold text-2xl mb-2">{{ __('sheet.lyrics_and_chords') }}</h3>
+                    <div>
+                        <TextArea
+                            name="lyrics"
+                            v-model="part.lyrics"
+                            rows="12"
+                        />
+                    </div>
+                </div>
+                <div class="lg:pl-4 col-span-7" v-if="!part.simple">
                     <h3 class="font-bold text-2xl mb-2">{{ __('sheet.sequences') }}</h3>
                     <div
                         v-for="(sequence, sequenceKey) in part.sequences"
@@ -172,13 +191,13 @@ function focusMeasure(sequenceKey, measureKey, setToEnd = false) {
                             <div class="flex-none ">
                                 <div class="flex justify-end text-xs leading-none">
                                     <div
-                                        class="text-indigo-500 border-2 border-transparent border-b-0 flex-none leading-none">
+                                        class="text-indigo-500 border border-transparent border-b-0 flex-none leading-none">
                                         <input type="text"
                                                class="w-6 p-0 inline text-right leading-none border-0 bg-transparent border-transparent focus:border-transparent focus:ring-0 text-xs"
                                                style="visibility: hidden">
                                     </div>
                                 </div>
-                                <div class="border-2 border-indigo-200 relative">
+                                <div class="border border-indigo-200 relative">
                                     <input type="number"
                                            class="w-16 block border-0 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm pr-1"
                                            v-model="sequence.quantity"
@@ -199,14 +218,14 @@ function focusMeasure(sequenceKey, measureKey, setToEnd = false) {
                                             <div
                                                 class="flex justify-end text-xs leading-none">
                                                 <div
-                                                    class="text-indigo-500 border-2 border-indigo-200 border-b-0 flex-none leading-none">
+                                                    class="text-indigo-500 border border-indigo-200 border-b-0 flex-none leading-none">
                                                     <input type="text"
                                                            class="w-8 p-0 inline leading-none border-0 bg-transparent border-transparent focus:border-transparent focus:ring-0 text-xs text-center"
                                                            v-model="measure.time_signature">
                                                 </div>
                                             </div>
 
-                                            <div class="border-indigo-200 focus:border-indigo-500 focus:ring-indigo-500 border-2 border-l-0">
+                                            <div class="border-indigo-200 focus:border-indigo-500 focus:ring-indigo-500 border border-l-0">
                                                 <input type="text"
                                                        class="block w-full border-0 sm:text-sm"
                                                        v-model="measure.chords"
@@ -230,6 +249,7 @@ function focusMeasure(sequenceKey, measureKey, setToEnd = false) {
                                 </button>
                                 <button type="button"
                                         @click="pasteSequence(sequenceKey)"
+                                        v-if="copiedSequence"
                                         class="inline-flex items-center rounded-md bg-indigo-50 hover:text-white hover:bg-indigo-700 border-none px-1 py-1 ml-1 text-sm font-medium leading-4 text-gray-700 shadow-sm">
                                     <ClipboardDocumentIcon class="h-5 w-5"
                                                            aria-hidden="true"/>
@@ -252,7 +272,7 @@ function focusMeasure(sequenceKey, measureKey, setToEnd = false) {
                                     />
                                 </div>
                                 <div class="col-span-1">
-                                    <FileUpload></FileUpload>
+                                    <FileUpload :id="sequence.id" accept="image/*"></FileUpload>
                                 </div>
                             </div>
                         </div>
@@ -285,11 +305,11 @@ function focusMeasure(sequenceKey, measureKey, setToEnd = false) {
                 </MutedButton>
             </div>
             <div class="flex justify-end">
-                <MutedButton @click="$emit('closePart')" class="mr-2">
-                    {{ __('general.close') }}
-                </MutedButton>
-                <PrimaryButton @click="nextPart !== null ? $emit('moveToNextPart') : $emit('addPart')">
+                <MutedButton @click="nextPart !== null ? $emit('moveToNextPart') : $emit('addPart')" class="mr-2">
                     {{ __('sheet.next_part') }}
+                </MutedButton>
+                <PrimaryButton @click="$emit('closePart')">
+                    {{ __('general.close') }}
                 </PrimaryButton>
             </div>
         </div>

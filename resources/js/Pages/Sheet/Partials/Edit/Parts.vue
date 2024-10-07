@@ -6,9 +6,11 @@ import EditPart from "@/Pages/Sheet/Partials/Edit/EditPart.vue";
 import MutedButton from "@/Components/Form/MutedButton.vue";
 import DangerButton from "@/Components/Form/DangerButton.vue";
 import __ from "@/lang";
+import ChordPro from "@/Pages/Sheet/Partials/Show/ChordPro.vue";
 
 const props = defineProps({
     parts: Array,
+    timeSignature: String,
     showCloseDismissModal: Boolean,
     time_signature: String|null
 });
@@ -131,11 +133,14 @@ function openPart(partKey) {
                                 </div>
                             </div>
                             <div class="col-span-1">
-                                <div v-for="sequence in part.sequences" :key="sequence.id">
+                                <div v-for="sequence in part.sequences" :key="sequence.id" v-if="!part.simple">
                                     <p class="flex items-center text-sm text-gray-500">
                                         <strong class="mr-1">{{ sequence.quantity }}x:</strong>
                                         <span>{{ getChordSequence(sequence) }}</span>
                                     </p>
+                                </div>
+                                <div class="text-sm text-gray-500" v-if="part.simple">
+                                    <ChordPro :part="part"></ChordPro>
                                 </div>
                             </div>
                         </div>
@@ -164,6 +169,7 @@ function openPart(partKey) {
             @move-to-previous-part="currentPart--"
             @move-to-next-part="currentPart++"
             @close-part="currentPart = null"
+            :time-signature="timeSignature"
         />
     </Modal>
 

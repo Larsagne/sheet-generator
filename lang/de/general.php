@@ -12,4 +12,5 @@ return [
     'edit' => 'Bearbeiten',
     'email' => 'E-Mail-Adresse',
     'Hello!' => 'Hallo!',
+    'open_invitations' => 'Offene Einladungen'
 ];

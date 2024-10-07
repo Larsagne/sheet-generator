@@ -7,6 +7,7 @@ import { useForm } from 'laravel-precognition-vue-inertia';
 import TextArea from "@/Components/Form/TextArea.vue";
 import Parts from "@/Pages/Sheet/Partials/Edit/Parts.vue";
 import {onBeforeUnmount, onMounted, ref} from "vue";
+import FileUpload from "@/Components/Form/FileUpload.vue";
 
 const props = defineProps({
     sheet: Object,
@@ -103,17 +104,25 @@ function redirectBack() {
                     />
                 </div>
 
-                <div class="sm:col-span-6">
+                <div class="sm:col-span-4">
                     <TextArea
                         name="description"
                         label="sheet.description_label"
                         v-model="form.description"
                         :error="form.errors.description"
                         @input="form.validate('description')"
+                        rows="3"
                     />
                 </div>
 
-                <div class="sm:col-span-6">
+
+                <div class="sm:col-span-4">
+                    <label :for="name" class="block text-sm font-medium leading-6 text-gray-700">Test</label>
+                    <FileUpload
+                        accept="application/pdf"
+                    ></FileUpload>
+                </div>
+                <div class="sm:col-span-4">
                     <div class="grid grid-cols-4 gap-4">
                         <div class="sm:col-span-1">
                             <Input
@@ -173,6 +182,7 @@ function redirectBack() {
             :time_signature="form.time_signature"
             @close-close-dismiss-modal="showCloseDismissModal = false"
             @redirect-back="redirectBack"
+            :time-signature="form.time_signature"
         />
     </BaseLayout>
 </template>

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('source')->after('email');
+        Schema::table('parts', function (Blueprint $table) {
+            $table->boolean('simple')->after('lyrics')->default(false);
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->removeColumn('source');
+        Schema::table('parts', function (Blueprint $table) {
+            $table->removeColumn('type');
         });
     }
 };

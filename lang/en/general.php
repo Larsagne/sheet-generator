@@ -11,5 +11,6 @@ return [
     'delete' => 'Delete',
     'edit' => 'Edit',
     'email' => 'Email address',
-    'Hello' => 'Hallo'
+    'Hello' => 'Hallo',
+    'open_invitations' => 'Open invitations'
 ];

@@ -65,14 +65,8 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Invitation::class, 'email', 'email');
     }
 
-    public function routeNotificationForMail($notification)
+    public function invitationsSent(): HasMany
     {
-        return $this->email;
-    }
-
-    public function routeNotificationForDatabase($notification)
-    {
-        // Hier zurückgeben, wie der Benutzer für die Datenbank-Benachrichtigung konfiguriert werden soll
-        return $this->id; // Beispiel: Benachrichtigungen in die 'notifications' Tabelle für diesen Benutzer speichern
+        return $this->hasMany(Invitation::class, 'invited_by');
     }
 }

@@ -48,7 +48,7 @@ function formatDate(date) {
             <td class="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                 <span class="inline-flex">
                     <SecondaryButton @click="deleteSheet = sheet" class="px-2 mr-2"><TrashIcon class="h-4 w-4" aria-hidden="true"/></SecondaryButton>
-                    <SecondaryButton :href="route('sheets.playback', sheet.id)" class="mr-2">{{ __('sheet.playback') }}</SecondaryButton>
+<!--                    <SecondaryButton :href="route('sheets.playback', sheet.id)" class="mr-2">{{ __('sheet.playback') }}</SecondaryButton>-->
                     <SecondaryButton :href="route('sheets.edit', sheet.id)" class="px-2"><PencilSquareIcon class="h-4 w-4" aria-hidden="true"/></SecondaryButton>
                 </span>
             </td>

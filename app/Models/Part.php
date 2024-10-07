@@ -18,7 +18,7 @@ class Part extends Model
     protected $with = ['sequences'];
 
     protected $fillable = [
-        'name', 'position', 'description', 'lyrics',
+        'name', 'position', 'description', 'lyrics', 'simple'
     ];
 
     public function sheet(): BelongsTo

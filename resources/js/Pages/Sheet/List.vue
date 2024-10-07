@@ -74,7 +74,7 @@ function getInitials(string) {
                         <BandTile
                             :initials="getInitials(user.name)"
                             :title="user.name"
-                            subtitle="Meine Sheets"
+                            :subtitle="__('sheet.my_sheets')"
                             background-color="bg-gray-500"
                             :active="activeSelfSheets"
                             :callback="() => {activeSelfSheets = !activeSelfSheets}"

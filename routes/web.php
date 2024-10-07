@@ -1,13 +1,13 @@
 <?php
 
 use App\Http\Controllers\BandController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvitationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SheetController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +23,7 @@ use Inertia\Inertia;
 Route::get('/', [WebsiteController::class, 'index'])->name('website.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

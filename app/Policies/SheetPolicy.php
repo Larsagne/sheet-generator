@@ -2,70 +2,68 @@
 
 namespace App\Policies;
 
+use App\Models\Access;
+use App\Models\Band;
 use App\Models\Sheet;
 use App\Models\User;
 
 class SheetPolicy
 {
-    /**
-     * Determine whether the user can view any sheets.
-     */
-    public function viewAny(User $user): bool
+    public function viewAny(): bool
     {
         return true;
     }
 
-    /**
-     * Determine whether the user can view the sheet.
-     */
     public function view(User $user, Sheet $sheet): bool
     {
         return $this->hasSheetAccess($user, $sheet);
     }
 
-    /**
-     * Determine whether the user can view the pdf of the sheet.
-     */
     public function pdf(User $user, Sheet $sheet): bool
     {
         return $this->hasSheetAccess($user, $sheet);
     }
 
-    /**
-     * Determine whether the user can view the playback of the sheet.
-     */
     public function playback(User $user, Sheet $sheet): bool
     {
         return $this->hasSheetAccess($user, $sheet);
     }
 
-    /**
-     * Determine whether the user can create sheets.
-     */
-    public function create(User $user): bool
+    public function create(): bool
     {
         return true;
     }
 
-    /**
-     * Determine whether the user can update the sheet.
-     */
     public function update(User $user, Sheet $sheet): bool
     {
-        return $user->id === $sheet->user_id;
+        return $this->hasSheetAccess($user, $sheet);
     }
 
-    /**
-     * Determine whether the user can delete the sheet.
-     */
     public function delete(User $user, Sheet $sheet): bool
     {
-        return $user->id === $sheet->user_id;
+        return $this->isCreator($user, $sheet);
     }
 
     private function hasSheetAccess(User $user, Sheet $sheet): bool
     {
-        // Todo: Extend if user has access
+        $bandHasAccess = Access::where('accessable_type', Band::class)
+            ->whereIn('accessable_id', $user->bands()->select(['id']))
+            ->where('resourceable_id', $sheet->id)
+            ->where('resourceable_type', Sheet::class)
+            ->exists();
+
+        $userHasAccess = Access::where('accessable_type', User::class)
+            ->where('accessable_id', $user->id)
+            ->where('resourceable_id', $sheet->id)
+            ->where('resourceable_type', Sheet::class)
+            ->exists();
+
+        return
+            $this->isCreator($user, $sheet) || $bandHasAccess || $userHasAccess;
+    }
+
+    private function isCreator(User $user, Sheet $sheet)
+    {
         return $user->id === $sheet->user_id;
     }
 }

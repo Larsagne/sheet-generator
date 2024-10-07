@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('invitations', function (Blueprint $table) {
+        Schema::create('accesses', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('email');
-            $table->string('token')->unique();
-            $table->uuid('invitable_id');
-            $table->string('invitable_type');
-            $table->foreignIdFor(User::class, 'invited_by');
+            $table->uuid('accessable_id');
+            $table->string('accessable_type');
+            $table->uuid('resourceable_id');
+            $table->string('resourceable_type');
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('invitations');
+        Schema::dropIfExists('accesses');
     }
 };
